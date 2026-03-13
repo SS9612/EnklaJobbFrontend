@@ -1,12 +1,13 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useAuth } from '../../auth/useAuth';
 import FormField from '../ui/FormField';
-import type { LoginRequestDto } from '../../types/auth.types';
+import PasswordField from '../ui/PasswordField';
+import type { ApiErrorResponse, LoginRequestDto } from '../../types/auth.types';
 
-// ── Zod schema — mirrors backend LoginRequestValidator ────────────────────────
 const loginSchema = z.object({
   email: z.string().email('A valid email address is required'),
   password: z.string().min(1, 'Password is required'),
@@ -21,6 +22,7 @@ interface LoginFormProps {
 export default function LoginForm({ onSuccess }: LoginFormProps) {
   const { login } = useAuth();
   const [serverError, setServerError] = useState<string | null>(null);
+  const [emailNotConfirmed, setEmailNotConfirmed] = useState(false);
 
   const {
     register,
@@ -30,15 +32,22 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
 
   const onSubmit = async (values: LoginFormValues) => {
     setServerError(null);
+    setEmailNotConfirmed(false);
     try {
       await login(values as LoginRequestDto);
       onSuccess?.();
     } catch (err: unknown) {
-      // Extract the backend ProblemDetails title or fall back to a generic message.
-      const msg =
-        (err as { response?: { data?: { title?: string } } })?.response?.data?.title ??
-        'Login failed. Please check your credentials.';
-      setServerError(msg);
+      const data = (err as { response?: { data?: ApiErrorResponse } })?.response?.data;
+
+      // Detect the machine-readable error code so we can show a targeted resend link
+      // rather than just a generic error message.
+      if (data?.errorCode === 'EMAIL_NOT_CONFIRMED') {
+        setEmailNotConfirmed(true);
+        setServerError(data.title ?? 'Account not yet confirmed. Please verify your email.');
+        return;
+      }
+
+      setServerError(data?.title ?? 'Login failed. Please check your credentials.');
     }
   };
 
@@ -51,18 +60,30 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
         error={errors.email}
         {...register('email')}
       />
-      <FormField
+      <PasswordField
         label="Password"
-        type="password"
         autoComplete="current-password"
         error={errors.password}
         {...register('password')}
       />
 
+      <div style={{ textAlign: 'right', marginTop: '-0.5rem' }}>
+        <Link to="/forgot-password" className="link" style={{ fontSize: '0.875rem' }}>
+          Forgot password?
+        </Link>
+      </div>
+
       {serverError && (
-        <p className="form-server-error" role="alert">
-          {serverError}
-        </p>
+        <div>
+          <p className="form-server-error" role="alert">{serverError}</p>
+          {emailNotConfirmed && (
+            <p style={{ marginTop: '0.5rem', fontSize: '0.875rem', textAlign: 'center' }}>
+              <Link to="/resend-confirmation" className="link">
+                Resend confirmation email
+              </Link>
+            </p>
+          )}
+        </div>
       )}
 
       <button type="submit" className="btn btn--primary" disabled={isSubmitting}>

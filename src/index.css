@@ -182,6 +182,42 @@ select.form-input {
 .table th { font-weight: 700; background: #f7f8fa; }
 .table tbody tr:hover { background: #fafbff; }
 
+/* ── Success card ───────────────────────────────────────────────────────────── */
+.success-card { text-align: center; padding: 0.5rem 0; }
+.success-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: #e6ffed;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  color: #22c55e;
+  margin-bottom: 1rem;
+}
+.success-card__title { margin: 0 0 0.5rem; font-size: 1.25rem; font-weight: 700; }
+.success-card__message { color: #555; margin: 0 0 1.5rem; line-height: 1.6; }
+.success-card__cta { display: flex; justify-content: center; }
+
+/* ── Password field ──────────────────────────────────────────────────────────── */
+.password-wrapper { position: relative; display: flex; }
+.password-input { flex: 1; padding-right: 2.75rem; }
+.password-toggle {
+  position: absolute;
+  right: 0.6rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.2rem;
+  font-size: 1rem;
+  line-height: 1;
+  color: #888;
+}
+.password-toggle:hover { color: #333; }
+
 /* ── Spinner ────────────────────────────────────────────────────────────────── */
 .spinner {
   width: 36px;

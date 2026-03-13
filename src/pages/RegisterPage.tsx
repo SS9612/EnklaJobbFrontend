@@ -1,36 +1,27 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import AuthCard, { SignInFooter } from '../components/auth/AuthCard';
 import RegisterForm from '../components/auth/RegisterForm';
+import SuccessCard from '../components/ui/SuccessCard';
 
 export default function RegisterPage() {
   const [registered, setRegistered] = useState(false);
 
   if (registered) {
     return (
-      <div className="page-center">
-        <div className="auth-card auth-card--wide">
-          <h1 className="auth-card__title">Check your email</h1>
-          <p style={{ textAlign: 'center', color: '#555', marginBottom: '1.5rem' }}>
-            Your account has been created. Please verify your email before signing in.
-          </p>
-          <Link to="/login" className="btn btn--primary" style={{ display: 'block', textAlign: 'center' }}>
-            Go to sign in
-          </Link>
-        </div>
-      </div>
+      <AuthCard title="Check your email" wide>
+        <SuccessCard
+          title="Account created!"
+          message="We've sent a confirmation link to your email address. Click it to activate your account before signing in."
+          cta={<Link to="/login" className="btn btn--primary">Go to sign in</Link>}
+        />
+      </AuthCard>
     );
   }
 
   return (
-    <div className="page-center">
-      <div className="auth-card auth-card--wide">
-        <h1 className="auth-card__title">Create account</h1>
-        <RegisterForm onSuccess={() => setRegistered(true)} />
-        <p className="auth-card__footer">
-          Already have an account?{' '}
-          <Link to="/login" className="link">Sign in</Link>
-        </p>
-      </div>
-    </div>
+    <AuthCard title="Create account" wide footer={<SignInFooter />}>
+      <RegisterForm onSuccess={() => setRegistered(true)} />
+    </AuthCard>
   );
 }
