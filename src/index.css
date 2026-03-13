@@ -41,7 +41,12 @@ body {
   padding: 2.5rem;
   width: 100%;
   max-width: 440px;
+  /* Prevent any child from punching outside the card boundary */
+  overflow: hidden;
 }
+
+/* Wider variant for the register form which has more fields */
+.auth-card--wide { max-width: 520px; }
 
 .auth-card__title {
   margin: 0 0 1.75rem;
@@ -71,8 +76,28 @@ body {
 .auth-form { display: flex; flex-direction: column; gap: 1.1rem; }
 
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-row > * { min-width: 0; }
 
 .form-field { display: flex; flex-direction: column; gap: 0.3rem; }
+
+/* ── Date of birth picker ───────────────────────────────────────────────────── */
+.dob-row {
+  display: grid;
+  /* Equal thirds so Day / Month / Year all start from the left at the same x */
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.dob-col { display: flex; flex-direction: column; gap: 0.25rem; min-width: 0; }
+
+.dob-sublabel {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #888;
+  letter-spacing: 0.01em;
+}
+
+.dob-select { width: 100%; }
 
 .form-label { font-size: 0.875rem; font-weight: 600; color: #333; }
 
@@ -84,6 +109,21 @@ body {
   transition: border-color 0.15s;
   outline: none;
   background: #fff;
+}
+
+/* ── Select arrow ───────────────────────────────────────────────────────────── */
+/* Remove the browser-native arrow and replace with a controlled one.           */
+/* background-position right 0.5rem keeps the chevron just inside the edge      */
+/* rather than pinned to the very far right of a wide select.                   */
+select.form-input {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23667085' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  padding-right: 1.75rem;
+  cursor: pointer;
 }
 
 .form-input:focus { border-color: #6c63ff; box-shadow: 0 0 0 3px rgba(108,99,255,0.12); }

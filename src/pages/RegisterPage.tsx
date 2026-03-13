@@ -8,7 +8,7 @@ export default function RegisterPage() {
   if (registered) {
     return (
       <div className="page-center">
-        <div className="auth-card">
+        <div className="auth-card auth-card--wide">
           <h1 className="auth-card__title">Check your email</h1>
           <p style={{ textAlign: 'center', color: '#555', marginBottom: '1.5rem' }}>
             Your account has been created. Please verify your email before signing in.
@@ -23,7 +23,7 @@ export default function RegisterPage() {
 
   return (
     <div className="page-center">
-      <div className="auth-card">
+      <div className="auth-card auth-card--wide">
         <h1 className="auth-card__title">Create account</h1>
         <RegisterForm onSuccess={() => setRegistered(true)} />
         <p className="auth-card__footer">
